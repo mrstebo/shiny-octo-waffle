@@ -9,46 +9,42 @@ class JobsTest < Minitest::Test
     assert_equal '', Jobs.new.build_order('')
   end
 
-  def test_empty_hash
-    assert_equal '', Jobs.new.build_order({})
-  end
-
   def test_sequence_with_no_dependencies
-    jobs = {
-      a: nil,
-      b: nil,
-      c: nil
-    }
+    jobs = <<-JOBS
+    a =>
+    b =>
+    c =>
+    JOBS
     assert_equal 'abc', Jobs.new.build_order(jobs)
   end
 
   def test_sequence_with_dependency
-    jobs = {
-      a: nil,
-      b: :c,
-      c: nil
-    }
+    jobs = <<-JOBS
+    a =>
+    b => c
+    c =>
+    JOBS
     assert_equal 'acb', Jobs.new.build_order(jobs)
   end
 
   def test_sequence_with_dependencies
-    jobs = {
-      a: nil,
-      b: :c,
-      c: :f,
-      d: :a,
-      e: :b,
-      f: nil
-    }
+    jobs = <<-JOBS
+    a =>
+    b => c
+    c => f
+    d => a
+    e => b
+    f =>
+    JOBS
     assert_equal 'afcbde', Jobs.new.build_order(jobs)
   end
 
   def test_sequence_with_self_dependency
-    jobs = {
-      a: nil,
-      b: nil,
-      c: :c
-    }
+    jobs = <<-JOBS
+    a =>
+    b =>
+    c => c
+    JOBS
     exception = assert_raises SelfDependenyError do
       Jobs.new.build_order(jobs)
     end
@@ -56,14 +52,14 @@ class JobsTest < Minitest::Test
   end
 
   def test_sequence_with_circular_dependency
-    jobs = {
-      a: nil,
-      b: :c,
-      c: :f,
-      d: :a,
-      e: nil,
-      f: :b
-    }
+    jobs = <<-JOBS
+    a =>
+    b => c
+    c => f
+    d => a
+    e =>
+    f => b
+    JOBS
     exception = assert_raises CircularDependenyError do
       Jobs.new.build_order(jobs)
     end

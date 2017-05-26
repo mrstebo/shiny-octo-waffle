@@ -2,15 +2,15 @@ require_relative 'circular_dependency_error'
 require_relative 'self_dependency_error'
 
 class Jobs
-  def build_order(build_sequence)
-    return '' if build_sequence.empty?
+  def build_order(sequence)
+    sequence_hash = convert_to_hash(sequence)
     visited = []
     stack = []
 
-    build_sequence.keys.each do |job|
+    sequence_hash.keys.each do |job|
       next if visited.include?(job)
       visited << job
-      find_dependencies(job, build_sequence).reverse.each do |dependency|
+      find_dependencies(job, sequence_hash).reverse.each do |dependency|
         next if visited.include?(dependency)
         visited << dependency
         stack << dependency
@@ -22,6 +22,10 @@ class Jobs
   end
 
   private
+
+  def convert_to_hash(build_sequence)
+    return Hash[build_sequence.lines.map {|line| line.split('=>').map(&:strip)}]
+  end
 
   def find_dependencies(job, sequence, visited=[])
     return [] if sequence[job].nil?
