@@ -8,7 +8,6 @@ class JobsTest < Minitest::Test
   end
 
   def test_sequence_with_no_dependencies
-    skip
     jobs = {
       a: nil,
       b: nil,
