@@ -49,9 +49,10 @@ class JobsTest < Minitest::Test
       b: nil,
       c: :c
     }
-    assert_raises SelfDependenyError, 'c cannot depend on iteself' do
+    exception = assert_raises SelfDependenyError do
       Jobs.new.build_order(jobs)
     end
+    assert_equal 'c cannot depend on itself', exception.message
   end
 
   def test_sequence_with_circular_dependency
@@ -63,8 +64,9 @@ class JobsTest < Minitest::Test
       e: nil,
       f: :b
     }
-    assert_raises CircularDependenyError, 'f is a circular dependency' do
+    exception = assert_raises CircularDependenyError do
       Jobs.new.build_order(jobs)
     end
+    assert_equal 'f is a circular dependency', exception.message
   end
 end
