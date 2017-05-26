@@ -17,7 +17,6 @@ class JobsTest < Minitest::Test
   end
 
   def test_sequence_with_dependency
-    skip
     jobs = {
       a: nil,
       b: :c,
@@ -27,7 +26,6 @@ class JobsTest < Minitest::Test
   end
 
   def test_sequence_with_dependencies
-    skip
     jobs = {
       a: nil,
       b: :c,
@@ -36,7 +34,7 @@ class JobsTest < Minitest::Test
       e: :b,
       f: nil
     }
-    assert_equal 'fcbead', Jobs.new.build_order(jobs)
+    assert_equal 'afcbde', Jobs.new.build_order(jobs)
   end
 
   def test_sequence_with_self_dependency
