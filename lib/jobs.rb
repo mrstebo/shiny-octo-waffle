@@ -18,6 +18,8 @@ class Jobs
     stack.map(&:to_s).join
   end
 
+  private
+
   def find_dependencies(key, sequence, visited=[])
     return [] if sequence[key].nil?
     raise RuntimeError if key == sequence[key]
