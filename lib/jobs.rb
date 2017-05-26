@@ -7,15 +7,15 @@ class Jobs
     visited = []
     stack = []
 
-    build_sequence.keys.each do |key|
-      next if visited.include?(key)
-      visited << key
-      find_dependencies(key, build_sequence).reverse.each do |dependency|
+    build_sequence.keys.each do |job|
+      next if visited.include?(job)
+      visited << job
+      find_dependencies(job, build_sequence).reverse.each do |dependency|
         next if visited.include?(dependency)
         visited << dependency
         stack << dependency
       end
-      stack << key
+      stack << job
     end
 
     stack.map(&:to_s).join
@@ -23,10 +23,10 @@ class Jobs
 
   private
 
-  def find_dependencies(key, sequence, visited=[])
-    return [] if sequence[key].nil?
-    raise SelfDependenyError, "#{key} cannot depend on itself" if key == sequence[key]
-    raise CircularDependenyError, "#{key} is a circular dependency" if visited.include?(sequence[key])
-    [sequence[key]] + find_dependencies(sequence[key], sequence, visited + [key])
+  def find_dependencies(job, sequence, visited=[])
+    return [] if sequence[job].nil?
+    raise SelfDependenyError, "#{job} cannot depend on itself" if job == sequence[job]
+    raise CircularDependenyError, "#{job} is a circular dependency" if visited.include?(sequence[job])
+    [sequence[job]] + find_dependencies(sequence[job], sequence, visited + [job])
   end
 end
