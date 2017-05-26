@@ -26,7 +26,7 @@ class Jobs
   def find_dependencies(key, sequence, visited=[])
     return [] if sequence[key].nil?
     raise SelfDependenyError, "#{key} cannot depend on itself" if key == sequence[key]
-    raise CircularDependenyError, "#{key} is a circular dependency" if visited.include?(key)
+    raise CircularDependenyError, "#{key} is a circular dependency" if visited.include?(sequence[key])
     [sequence[key]] + find_dependencies(sequence[key], sequence, visited + [key])
   end
 end
