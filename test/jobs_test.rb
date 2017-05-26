@@ -49,7 +49,6 @@ class JobsTest < Minitest::Test
   end
 
   def test_sequence_with_circular_dependency
-    skip
     jobs = {
       a: nil,
       b: :c,
