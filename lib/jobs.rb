@@ -1,3 +1,6 @@
+require_relative 'circular_dependency_error'
+require_relative 'self_dependency_error'
+
 class Jobs
   def build_order(build_sequence)
     return '' if build_sequence.empty?
@@ -22,8 +25,8 @@ class Jobs
 
   def find_dependencies(key, sequence, visited=[])
     return [] if sequence[key].nil?
-    raise RuntimeError if key == sequence[key]
-    raise RuntimeError if visited.include?(key)
+    raise SelfDependenyError, "#{key} cannot depend on itself" if key == sequence[key]
+    raise CircularDependenyError, "#{key} is a circular dependency" if visited.include?(key)
     [sequence[key]] + find_dependencies(sequence[key], sequence, visited + [key])
   end
 end

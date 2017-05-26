@@ -1,6 +1,8 @@
 require 'minitest/autorun'
 require 'minitest/pride'
 require_relative '../lib/jobs'
+require_relative '../lib/circular_dependency_error'
+require_relative '../lib/self_dependency_error'
 
 class JobsTest < Minitest::Test
   def test_empty_sequence
@@ -43,7 +45,7 @@ class JobsTest < Minitest::Test
       b: nil,
       c: :c
     }
-    assert_raises RuntimeError do
+    assert_raises SelfDependenyError do
       Jobs.new.build_order(jobs)
     end
   end
@@ -57,7 +59,7 @@ class JobsTest < Minitest::Test
       e: nil,
       f: :b
     }
-    assert_raises RuntimeError do
+    assert_raises CircularDependenyError do
       Jobs.new.build_order(jobs)
     end
   end
