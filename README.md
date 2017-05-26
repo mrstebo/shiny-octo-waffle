@@ -56,12 +56,8 @@ Jobs.new.build_order({
 ## How it works
 
 Here are the steps we take to create the build order:
-1. Loop through the keys (jobs) in the hash
-2. Add to the `visited` array if we haven't seen it before, otherwise go to the next `job`
-3. Find the nested dependencies for the current `job` and loop through them in reverse order
-  - Raise a `SelfDependenyError` if we have a self referencing dependency
-  - Raise a `CircularDependenyError` if we find a circular dependency
-4. Add to the `visited` array if we haven't seen it before, otherwise go to the next `dependency`
-5. Add the `dependency` to the `stack`
-6. Add the parent `job` to the `stack`
-7. Return a string of all the jobs in the `stack`
+1. Convert the `build_sequence` into a hash that can be used by the `TSortableHash`
+2. When transforming it will also check for self and cyclic dependencies and raise an error if one is found
+3. Create a `TSortableHash` with the converted hash
+4. Run the `tsort` method
+5. Convert the resulting array back into a sequence of characters
