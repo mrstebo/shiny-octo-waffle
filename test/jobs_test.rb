@@ -9,6 +9,10 @@ class JobsTest < Minitest::Test
     assert_equal '', Jobs.new.build_order('')
   end
 
+  def test_empty_hash
+    assert_equal '', Jobs.new.build_order({})
+  end
+
   def test_sequence_with_no_dependencies
     jobs = {
       a: nil,
