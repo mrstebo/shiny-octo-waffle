@@ -20,6 +20,7 @@ class Jobs
 
   def find_dependencies(key, sequence)
     return [] if sequence[key].nil?
+    raise RuntimeError if key == sequence[key]
     [sequence[key]] + find_dependencies(sequence[key], sequence)
   end
 end
